@@ -27,6 +27,8 @@ var DoenerDream;
         drawBackground();
         background = DoenerDream.crc2.getImageData(0, 0, DoenerDream.crc2.canvas.width, DoenerDream.crc2.canvas.height);
         // window.setInterval(update, 50);
+        let testHuman = new DoenerDream.Human(new DoenerDream.Vector(100, 200));
+        testHuman.draw();
     }
     function drawBackground() {
         DoenerDream.crc2.fillStyle = "saddlebrown";

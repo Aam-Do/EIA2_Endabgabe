@@ -37,6 +37,8 @@ namespace DoenerDream {
         background = crc2.getImageData(0, 0, crc2.canvas.width, crc2.canvas.height);
 
         // window.setInterval(update, 50);
+        let testHuman: Human = new Human(new Vector(100, 200));
+        testHuman.draw();
     }
 
     function drawBackground(): void {
