@@ -1,0 +1,13 @@
+body, html {
+    margin: 0px;
+    height: 100%;
+    background-color: antiquewhite;
+}
+
+header {
+    text-align: center;
+}
+
+canvas {
+    margin-left: 200px;
+}
