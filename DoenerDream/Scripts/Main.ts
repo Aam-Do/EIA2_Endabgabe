@@ -25,7 +25,7 @@ namespace DoenerDream {
     //     sauce: 46
     // };
     let customerSpawnPoint: Vector
-    let test: Customer[];
+    export let test: Customer[] = [];
     let lastFrame: number;
 
     function hndLoad(_event: Event): void {
@@ -35,8 +35,7 @@ namespace DoenerDream {
         middleX = crc2.canvas.width / 2;
         middleY = crc2.canvas.height / 2;
 
-        customerSpawnPoint = new Vector(0, middleY);
-        test = [new Customer(customerSpawnPoint)]
+        customerSpawnPoint = new Vector(-50, middleY);
 
         drawBackground();
         background = crc2.getImageData(0, 0, crc2.canvas.width, crc2.canvas.height);
@@ -44,12 +43,20 @@ namespace DoenerDream {
         lastFrame = performance.now();
         update();
 
-        setTimeout(customerLeave, 4000)
+        setInterval(customerLeave, 4000)
+        newCustomer();
+        window.setInterval(newCustomer, 3000);
+    }
 
+    // test Functions
+
+    function newCustomer(): void {
+        if (test.length < 5) {
+            test.push(new Customer(new Vector(customerSpawnPoint.x, customerSpawnPoint.y)));
+        }
     }
 
     function customerLeave(): void {
-        console.log("leave");
         test[0].leave();
     }
 
@@ -66,7 +73,7 @@ namespace DoenerDream {
 
     export function removeCustomer(_customer: Customer): void {
         test.splice(test.indexOf(_customer), 1);
-        
+
     }
 
     function drawBackground(): void {

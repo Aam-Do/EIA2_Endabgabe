@@ -1,35 +1,62 @@
 namespace DoenerDream {
+
+    enum STATE {
+        INQUEUE,
+        WAITING,
+        LEAVING
+    }
+
     export class Customer extends Human {
         public order: string[];
-        public currentCustomer: boolean;
         protected moods: string[] = ["pissed", "angry", "unwell", "fine", "happy", "ecstatic"];
+        private state: STATE;
 
         public constructor(_position: Vector) {
             super(_position);
             this.velocity.set(150, 0);
             this.mood = this.moods[3];
             this.order = ["yufka", "corn", "lettuce", "cabbage", "onions", "sauce", "falafel"];
-            this.currentCustomer = false;
+            this.state = STATE.INQUEUE;
         }
 
         public move(_timeslice: number): void {
             super.move(_timeslice);
 
-            if (this.position.y > crc2.canvas.height) {
-                removeCustomer(this);
-            }
-            else if (this.position.x >= middleX - 150) {
-                this.velocity.set(0, 0);
-                this.position.x -= 1;
-                this.currentCustomer = true;
+            switch (this.state) {
+                case STATE.INQUEUE:
+                    let nextInLine: Customer = test[test.indexOf(this) - 1];
+                    if (this.position.x >= middleX - 150) {
+                        this.velocity.set(0, 0);
+                        this.state = STATE.WAITING;
+                        this.purchase();
+                        break;
+                    }
+                    else if (nextInLine) {
+                        if ((this.velocity.length * _timeslice) + 150 > new Vector(nextInLine.position.x - this.position.x, nextInLine.position.y - this.position.y).length) {
+                            this.velocity.set(0, 0);
+                        }
+                        else {
+                            this.velocity.set(150, 0);
+                        }
+                    }
+                    break;
+                case STATE.LEAVING:
+                    if (this.position.y > crc2.canvas.height + 50)
+                    removeCustomer(this);
+                    
             }
 
+            
         }
 
         public leave(): void {
             this.velocity.set(0, 150);
+            this.state = STATE.LEAVING;
         }
 
+        private purchase(): void {
+            //
+        }
 
     }
 }
