@@ -33,9 +33,9 @@ var DoenerDream;
         background = DoenerDream.crc2.getImageData(0, 0, DoenerDream.crc2.canvas.width, DoenerDream.crc2.canvas.height);
         lastFrame = performance.now();
         update();
-        setInterval(customerLeave, 4000);
+        setInterval(customerLeave, 4100);
         newCustomer();
-        window.setInterval(newCustomer, 3000);
+        window.setInterval(newCustomer, 3900);
     }
     // test Functions
     function newCustomer() {

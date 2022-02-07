@@ -7,6 +7,7 @@ var DoenerDream;
         }
         draw() {
             DoenerDream.crc2.save();
+            DoenerDream.crc2.fillStyle = "yellow";
             DoenerDream.crc2.translate(this.position.x, this.position.y);
             DoenerDream.crc2.beginPath();
             DoenerDream.crc2.arc(0, 0, 30, 0, 360);

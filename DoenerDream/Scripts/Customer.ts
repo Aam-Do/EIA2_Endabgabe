@@ -9,7 +9,7 @@ namespace DoenerDream {
     export class Customer extends Human {
         public order: string[];
         protected moods: string[] = ["pissed", "angry", "unwell", "fine", "happy", "ecstatic"];
-        private state: STATE;
+        public state: STATE;
 
         public constructor(_position: Vector) {
             super(_position);

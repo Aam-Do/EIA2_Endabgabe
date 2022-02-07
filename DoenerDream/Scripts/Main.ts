@@ -43,9 +43,9 @@ namespace DoenerDream {
         lastFrame = performance.now();
         update();
 
-        setInterval(customerLeave, 4000)
+        setInterval(customerLeave, 4100)
         newCustomer();
-        window.setInterval(newCustomer, 3000);
+        window.setInterval(newCustomer, 3900);
     }
 
     // test Functions
