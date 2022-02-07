@@ -19,6 +19,8 @@ var DoenerDream;
         corn: 52,
         sauce: 46
     };
+    console.log(calculateRandom(2, 10));
+    let test = [new DoenerDream.Customer(new DoenerDream.Vector(100, 200))];
     function hndLoad(_event) {
         let canvas = document.querySelector("canvas");
         DoenerDream.crc2 = canvas.getContext("2d");
@@ -27,9 +29,11 @@ var DoenerDream;
         drawBackground();
         background = DoenerDream.crc2.getImageData(0, 0, DoenerDream.crc2.canvas.width, DoenerDream.crc2.canvas.height);
         // window.setInterval(update, 50);
-        let testHuman = new DoenerDream.Human(new DoenerDream.Vector(100, 200));
-        testHuman.draw();
     }
+    function removeCustomer(_customer) {
+        test.splice(test.indexOf(_customer), 1);
+    }
+    DoenerDream.removeCustomer = removeCustomer;
     function drawBackground() {
         DoenerDream.crc2.fillStyle = "saddlebrown";
         DoenerDream.crc2.fillRect(0, 0, DoenerDream.crc2.canvas.width, DoenerDream.crc2.canvas.height);
@@ -40,5 +44,10 @@ var DoenerDream;
         DoenerDream.crc2.fillStyle = "lightgrey";
         DoenerDream.crc2.fillRect(DoenerDream.crc2.canvas.width - middleX / 6, 0, middleX / 6, middleY);
     }
+    function calculateRandom(_min, _max) {
+        let random = (Math.random() * (_max - _min)) + _min;
+        return (random);
+    }
+    DoenerDream.calculateRandom = calculateRandom;
 })(DoenerDream || (DoenerDream = {}));
 //# sourceMappingURL=Main.js.map

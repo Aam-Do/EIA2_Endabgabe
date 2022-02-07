@@ -24,6 +24,8 @@ namespace DoenerDream {
         corn: 52,
         sauce: 46
     };
+    console.log(calculateRandom(2, 10));
+    let test: Moveable[] = [new Customer(new Vector(100, 200))];
 
     function hndLoad(_event: Event): void {
         let canvas: HTMLCanvasElement = <HTMLCanvasElement>document.querySelector("canvas");
@@ -37,8 +39,10 @@ namespace DoenerDream {
         background = crc2.getImageData(0, 0, crc2.canvas.width, crc2.canvas.height);
 
         // window.setInterval(update, 50);
-        let testHuman: Human = new Human(new Vector(100, 200));
-        testHuman.draw();
+    }
+
+    export function removeCustomer(_customer: Customer): void {
+        test.splice(test.indexOf(_customer), 1);
     }
 
     function drawBackground(): void {
@@ -53,6 +57,11 @@ namespace DoenerDream {
 
         crc2.fillStyle = "lightgrey";
         crc2.fillRect(crc2.canvas.width - middleX / 6, 0, middleX / 6, middleY);
+    }
+
+    export function calculateRandom(_min: number, _max: number): number {
+        let random: number = (Math.random() * (_max - _min)) + _min;
+        return (random);
     }
 
 }
