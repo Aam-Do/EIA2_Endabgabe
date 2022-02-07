@@ -10,7 +10,8 @@ namespace DoenerDream {
         public draw(): void {
             crc2.save();
             crc2.translate(this.position.x, this.position.y);
-            crc2.arc(0, 0, 20, 0, 360);
+            crc2.beginPath();
+            crc2.arc(0, 0, 30, 0, 360);
             crc2.fill();
             crc2.restore();
         }
