@@ -14,8 +14,9 @@ var DoenerDream;
             DoenerDream.crc2.fill();
             DoenerDream.crc2.restore();
         }
-        updateMood() {
-            //
+        updateMood(_addend) {
+            console.log(this.mood);
+            this.mood = this.moods[this.moods.indexOf(this.mood) + _addend];
         }
     }
     DoenerDream.Human = Human;
