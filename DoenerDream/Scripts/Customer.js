@@ -41,7 +41,7 @@ var DoenerDream;
                         DoenerDream.removeCustomer(this);
             }
         }
-        leave() {
+        receiveFood() {
             this.velocity.set(0, 150);
             this.state = STATE.LEAVING;
         }

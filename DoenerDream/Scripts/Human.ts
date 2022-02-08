@@ -18,7 +18,6 @@ namespace DoenerDream {
         }
 
         public updateMood(_addend: number): void {
-            console.log(this.mood);
             this.mood = this.moods[this.moods.indexOf(this.mood) + _addend];
         }
 

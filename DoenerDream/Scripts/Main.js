@@ -23,7 +23,15 @@ var DoenerDream;
     let customerSpawnPoint;
     DoenerDream.test = [];
     let lastFrame;
+    function calculateRandom(_min, _max) {
+        let random = (Math.random() * (_max - _min)) + _min;
+        return (random);
+    }
+    DoenerDream.calculateRandom = calculateRandom;
     function hndLoad(_event) {
+        startGame();
+    }
+    function startGame() {
         let canvas = document.querySelector("canvas");
         DoenerDream.crc2 = canvas.getContext("2d");
         DoenerDream.middleX = DoenerDream.crc2.canvas.width / 2;
@@ -44,7 +52,7 @@ var DoenerDream;
         }
     }
     function customerLeave() {
-        DoenerDream.test[0].leave();
+        DoenerDream.test[0].receiveFood();
     }
     function update() {
         DoenerDream.crc2.putImageData(background, 0, 0);
@@ -70,10 +78,5 @@ var DoenerDream;
         DoenerDream.crc2.fillStyle = "lightgrey";
         DoenerDream.crc2.fillRect(DoenerDream.crc2.canvas.width - DoenerDream.middleX / 6, 0, DoenerDream.middleX / 6, DoenerDream.middleY);
     }
-    function calculateRandom(_min, _max) {
-        let random = (Math.random() * (_max - _min)) + _min;
-        return (random);
-    }
-    DoenerDream.calculateRandom = calculateRandom;
 })(DoenerDream || (DoenerDream = {}));
 //# sourceMappingURL=Main.js.map

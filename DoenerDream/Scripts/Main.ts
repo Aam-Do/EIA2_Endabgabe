@@ -28,7 +28,18 @@ namespace DoenerDream {
     export let test: Customer[] = [];
     let lastFrame: number;
 
+    export function calculateRandom(_min: number, _max: number): number {
+        let random: number = (Math.random() * (_max - _min)) + _min;
+        return (random);
+    }
+
     function hndLoad(_event: Event): void {
+
+        startGame();
+    }
+
+    function startGame(): void {
+        
         let canvas: HTMLCanvasElement = <HTMLCanvasElement>document.querySelector("canvas");
 
         crc2 = canvas.getContext("2d")!;
@@ -57,7 +68,7 @@ namespace DoenerDream {
     }
 
     function customerLeave(): void {
-        test[0].leave();
+        test[0].receiveFood();
     }
 
     function update(): void {
@@ -88,11 +99,6 @@ namespace DoenerDream {
 
         crc2.fillStyle = "lightgrey";
         crc2.fillRect(crc2.canvas.width - middleX / 6, 0, middleX / 6, middleY);
-    }
-
-    export function calculateRandom(_min: number, _max: number): number {
-        let random: number = (Math.random() * (_max - _min)) + _min;
-        return (random);
     }
 
 }

@@ -43,13 +43,12 @@ namespace DoenerDream {
                 case STATE.LEAVING:
                     if (this.position.y > crc2.canvas.height + 50)
                     removeCustomer(this);
-                    
             }
 
             
         }
 
-        public leave(): void {
+        public receiveFood(): void {
             this.velocity.set(0, 150);
             this.state = STATE.LEAVING;
         }
