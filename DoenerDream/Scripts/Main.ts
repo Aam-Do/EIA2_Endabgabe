@@ -10,23 +10,24 @@ namespace DoenerDream {
 
     window.addEventListener("load", hndLoad);
 
-    export let middleX: number;
-    export let middleY: number;
+    export let middle: Vector;
     let background: ImageData;
     export let crc2: CanvasRenderingContext2D;
     // export interface Stock {
     //     [key: string]: number;
     // }
-    // let stocks: Stock = {
+    // let stock: Stock = {
     //     onions: 74,
     //     lettuce: 33,
     //     cabbage: 68,
     //     corn: 52,
     //     sauce: 46
     // };
-    let customerSpawnPoint: Vector
+    // let maxStock: number;
+    let customerSpawnPoint: Vector;
     export let test: Customer[] = [];
     let lastFrame: number;
+    export let plate: Plate;
 
     export function calculateRandom(_min: number, _max: number): number {
         let random: number = (Math.random() * (_max - _min)) + _min;
@@ -39,14 +40,13 @@ namespace DoenerDream {
     }
 
     function startGame(): void {
-        
+
         let canvas: HTMLCanvasElement = <HTMLCanvasElement>document.querySelector("canvas");
 
         crc2 = canvas.getContext("2d")!;
-        middleX = crc2.canvas.width / 2;
-        middleY = crc2.canvas.height / 2;
-
-        customerSpawnPoint = new Vector(-50, middleY);
+        middle = new Vector(crc2.canvas.width / 2, crc2.canvas.height / 2);
+        plate = new Plate;
+        customerSpawnPoint = new Vector(-50, middle.y);
 
         drawBackground();
         background = crc2.getImageData(0, 0, crc2.canvas.width, crc2.canvas.height);
@@ -54,7 +54,7 @@ namespace DoenerDream {
         lastFrame = performance.now();
         update();
 
-        setInterval(customerLeave, 4100)
+        setInterval(customerLeave, 4100);
         newCustomer();
         window.setInterval(newCustomer, 3900);
     }
@@ -76,7 +76,7 @@ namespace DoenerDream {
         let frameTime: number = performance.now() - lastFrame;
         lastFrame = performance.now();
         for (let person of test) {
-            person.move(frameTime/1000);
+            person.move(frameTime / 1000);
             person.draw();
         }
         window.requestAnimationFrame(update);
@@ -92,13 +92,13 @@ namespace DoenerDream {
         crc2.fillRect(0, 0, crc2.canvas.width, crc2.canvas.height);
 
         crc2.fillStyle = "black";
-        crc2.fillRect(middleX - 100, 0, 150, crc2.canvas.height);
+        crc2.fillRect(middle.x - 100, 0, 150, crc2.canvas.height);
 
         crc2.fillStyle = "azure";
-        crc2.fillRect(middleX + (middleX / 2), 0, middleX / 2, crc2.canvas.height);
+        crc2.fillRect(middle.x + (middle.x / 2), 0, middle.x / 2, crc2.canvas.height);
 
         crc2.fillStyle = "lightgrey";
-        crc2.fillRect(crc2.canvas.width - middleX / 6, 0, middleX / 6, middleY);
+        crc2.fillRect(crc2.canvas.width - middle.x / 6, 0, middle.x / 6, middle.y);
     }
 
 }

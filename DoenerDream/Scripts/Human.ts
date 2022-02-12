@@ -17,8 +17,13 @@ namespace DoenerDream {
             crc2.restore();
         }
 
-        public updateMood(_addend: number): void {
-            this.mood = this.moods[this.moods.indexOf(this.mood) + _addend];
+        protected updateMood(_addend: number): void {
+            if (_addend < 0)
+                if (this.moods.indexOf(this.mood) > 0)
+                    this.mood = this.moods[this.moods.indexOf(this.mood) + _addend];
+            else {
+                this.mood = this.moods[this.moods.indexOf(this.mood) + _addend];
+            }
         }
 
     }

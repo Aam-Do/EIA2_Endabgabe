@@ -8,8 +8,8 @@ namespace DoenerDream {
 
     export class Customer extends Human {
         public order: string[];
-        protected moods: string[] = ["pissed", "angry", "unwell", "fine", "happy", "ecstatic"];
         public state: STATE;
+        protected moods: string[] = ["pissed", "angry", "unwell", "fine", "happy", "ecstatic"];
 
         public constructor(_position: Vector) {
             super(_position);
@@ -25,7 +25,7 @@ namespace DoenerDream {
             switch (this.state) {
                 case STATE.INQUEUE:
                     let nextInLine: Customer = test[test.indexOf(this) - 1];
-                    if (this.position.x >= middleX - 150) {
+                    if (this.position.x >= middle.x - 150) {
                         this.velocity.set(0, 0);
                         this.state = STATE.WAITING;
                         this.purchase();

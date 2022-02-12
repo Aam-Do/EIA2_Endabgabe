@@ -21,7 +21,7 @@ var DoenerDream;
             switch (this.state) {
                 case STATE.INQUEUE:
                     let nextInLine = DoenerDream.test[DoenerDream.test.indexOf(this) - 1];
-                    if (this.position.x >= DoenerDream.middleX - 150) {
+                    if (this.position.x >= DoenerDream.middle.x - 150) {
                         this.velocity.set(0, 0);
                         this.state = STATE.WAITING;
                         this.purchase();
