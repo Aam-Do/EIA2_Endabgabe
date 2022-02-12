@@ -12,3 +12,20 @@ header {
 canvas {
     margin-left: 200px;
 }
+
+#stockDiv {
+    background-color: rgba(255, 254, 254, 0.637);
+    position: absolute;
+    top: 520px;
+    left: 1200px;
+    width: 270px;
+}
+
+#stockDiv p {
+    margin-left: 20px;
+}
+
+#stockDiv button {
+    position:absolute;
+    right: 20px;
+}

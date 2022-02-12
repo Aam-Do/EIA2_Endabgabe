@@ -25,29 +25,27 @@ var DoenerDream;
             super.move(_timeslice);
             switch (this.task) {
                 case TASK.GOINGTOCONTAINER:
-                    if (this.target) {
-                        if ((this.velocity.length * _timeslice) + 250 > new DoenerDream.Vector(this.target.position.x - this.position.x, this.target.position.y - this.position.y).length) {
-                            this.velocity.set(800, 400);
-                            this.task = TASK.GOINGTOKITCHEN;
-                        }
+                    if ((this.velocity.length * _timeslice) + 250 > new DoenerDream.Vector(this.target.position.x - this.position.x, this.target.position.y - this.position.y).length) {
+                        this.velocity.set(800, 400);
+                        this.task = TASK.GOINGTOKITCHEN;
                     }
                     break;
                 case TASK.GOINGTOKITCHEN:
                     if ((this.velocity.length * _timeslice) + 100 > new DoenerDream.Vector(800 - this.position.x, 400 - this.position.y).length) {
                         this.velocity.set(0, 0);
+                        let difference = this.target.capacity - this.target.amount;
+                        DoenerDream.stock[this.target.ingredient] -= difference;
                         this.task = TASK.REFILLING;
                         setTimeout(this.comeBackFromRefill);
                     }
                     break;
                 case TASK.COMINGFROMREFILL:
-                    if (this.target) {
-                        if ((this.velocity.length * _timeslice) + 250 > new DoenerDream.Vector(this.target.position.x - this.position.x, this.target.position.y - this.position.y).length) {
-                            let distance = new DoenerDream.Vector(this.originalPosition.x - this.position.x, this.originalPosition.y - this.position.y);
-                            this.velocity.set(distance.x, distance.y);
-                            this.velocity.scale(100 / distance.length);
-                            this.task = TASK.RETURNING;
-                            this.target = undefined;
-                        }
+                    if ((this.velocity.length * _timeslice) + 250 > new DoenerDream.Vector(this.target.position.x - this.position.x, this.target.position.y - this.position.y).length) {
+                        let distance = new DoenerDream.Vector(this.originalPosition.x - this.position.x, this.originalPosition.y - this.position.y);
+                        this.velocity.set(distance.x, distance.y);
+                        this.velocity.scale(100 / distance.length);
+                        this.task = TASK.RETURNING;
+                        this.target = undefined;
                     }
                     break;
                 case TASK.RETURNING:
@@ -99,13 +97,11 @@ var DoenerDream;
             // }
         }
         comeBackFromRefill() {
-            if (this.target) {
-                this.target.amount = this.target.capacity;
-                this.task = TASK.COMINGFROMREFILL;
-                let distance = new DoenerDream.Vector(this.target.position.x - this.position.x, this.target.position.y - this.position.y);
-                this.velocity.set(distance.x, distance.y);
-                this.velocity.scale(100 / distance.length);
-            }
+            this.target.amount = this.target.capacity;
+            this.task = TASK.COMINGFROMREFILL;
+            let distance = new DoenerDream.Vector(this.target.position.x - this.position.x, this.target.position.y - this.position.y);
+            this.velocity.set(distance.x, distance.y);
+            this.velocity.scale(100 / distance.length);
         }
     }
     DoenerDream.Staff = Staff;

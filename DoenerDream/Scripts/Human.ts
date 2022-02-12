@@ -1,6 +1,6 @@
 namespace DoenerDream {
     export abstract class Human extends Moveable {
-        protected abstract readonly moods: string[];
+        protected abstract moods: string[];
         protected mood: string;
 
         protected constructor(_position: Vector) {

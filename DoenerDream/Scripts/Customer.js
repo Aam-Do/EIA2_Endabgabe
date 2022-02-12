@@ -12,7 +12,7 @@ var DoenerDream;
             super(_position);
             this.moods = ["pissed", "angry", "unwell", "fine", "happy", "ecstatic"];
             this.velocity.set(150, 0);
-            this.mood = this.moods[3];
+            this.mood = this.moods[Math.round(DoenerDream.calculateRandom(3, 4))];
             this.order = ["yufka", "corn", "lettuce", "cabbage", "onions", "sauce", "falafel"];
             this.state = STATE.INQUEUE;
         }
