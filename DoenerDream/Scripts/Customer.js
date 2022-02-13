@@ -20,7 +20,7 @@ var DoenerDream;
             super.move(_timeslice);
             switch (this.state) {
                 case STATE.INQUEUE:
-                    let nextInLine = DoenerDream.test[DoenerDream.test.indexOf(this) - 1];
+                    let nextInLine = DoenerDream.customers[DoenerDream.customers.indexOf(this) - 1];
                     if (this.position.x >= DoenerDream.middle.x - 150) {
                         this.velocity.set(0, 0);
                         this.state = STATE.WAITING;

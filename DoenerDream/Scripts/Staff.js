@@ -13,13 +13,14 @@ var DoenerDream;
         TASK[TASK["RECOVERING"] = 7] = "RECOVERING";
     })(TASK || (TASK = {}));
     class Staff extends DoenerDream.Human {
-        constructor() {
+        constructor(_restingTime) {
             super(new DoenerDream.Vector(600, 400));
             this.moods = ["burnout", "stressed", "content", "bored", "sleeping"];
             this.mood = "content";
             this.task = TASK.WAITING;
             this.originalPosition = new DoenerDream.Vector(600, 400);
-            setInterval(this.updateMood, this.restingTime, 1);
+            this.restingTime = _restingTime * 1000;
+            setInterval(this.updateMood.bind(this), this.restingTime, 1);
         }
         move(_timeslice) {
             super.move(_timeslice);
@@ -52,8 +53,8 @@ var DoenerDream;
                     if ((this.velocity.length * _timeslice) + 250 > new DoenerDream.Vector(this.originalPosition.x - this.position.x, this.originalPosition.y - this.position.y).length) {
                         this.velocity.set(0, 0);
                         this.task = TASK.WAITING;
-                        clearInterval(setInterval(this.updateMood));
-                        setInterval(this.updateMood, this.restingTime, 1);
+                        clearInterval(setInterval(this.updateMood.bind(this)));
+                        setInterval(this.updateMood.bind(this), this.restingTime, 1);
                     }
             }
         }
@@ -63,26 +64,27 @@ var DoenerDream;
             let distance = new DoenerDream.Vector(this.target.position.x - this.position.x, this.target.position.y - this.position.y);
             this.velocity.set(distance.x, distance.y);
             this.velocity.scale(100 / distance.length);
-            clearInterval(setInterval(this.updateMood));
-            setInterval(this.updateMood, this.restingTime, -1);
+            clearInterval(setInterval(this.updateMood.bind(this)));
+            setInterval(this.updateMood.bind(this), this.restingTime, -1);
         }
         fillPlate(_container) {
             DoenerDream.plate.contents.push(_container.ingredient);
             _container.amount -= 1;
         }
         updateMood(_addend) {
-            switch (this.moods.indexOf(this.mood)) {
-                case 0:
-                    clearInterval(setInterval(this.updateMood));
-                    let currentTask = this.task;
-                    this.task = TASK.RECOVERING;
-                    this.velocity.set(0, 0);
-                    setTimeout(this.resumeTask, this.restingTime * 2, currentTask);
-                    break;
-                case this.moods.length - 1:
-                    break;
-                default:
-                    super.updateMood(_addend);
+            console.log(this);
+            if (this.moods.indexOf(this.mood) >= 0) {
+                clearInterval(setInterval(this.updateMood.bind(this)));
+                let currentTask = this.task;
+                this.task = TASK.RECOVERING;
+                this.velocity.set(0, 0);
+                setTimeout(this.resumeTask, this.restingTime * 2, currentTask);
+            }
+            else if (this.moods.indexOf(this.mood) == this.moods.length - 1 && _addend > 0) {
+                // 
+            }
+            else {
+                super.updateMood(_addend);
             }
         }
         resumeTask(_task) {

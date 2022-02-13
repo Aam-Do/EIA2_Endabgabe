@@ -20,12 +20,13 @@ var DoenerDream;
     DoenerDream.customers = [];
     let workers = [];
     let containers = [];
+    let soldMeals = 0;
     let stockDiv;
+    let statsDiv;
     let orderDiv;
     let lastFrame;
     let canvas;
     let body;
-    DoenerDream.test = [];
     function calculateRandom(_min, _max) {
         let random = (Math.random() * (_max - _min)) + _min;
         return (random);
@@ -49,6 +50,9 @@ var DoenerDream;
         //     cabbage: maxStock,
         //     corn: maxStock,
         //     sauce: maxStock
+        // falafel: maxStock,
+        // yufkaBread: maxStock,
+        // doenerBread: maxStock
         // };
         staffRestingTime = 6;
         staffAmount = 3;
@@ -57,10 +61,13 @@ var DoenerDream;
         containerCapacity = 20;
         DoenerDream.stock = {
             onions: maxStock,
-            lettuce: 30,
-            cabbage: 30,
-            corn: 30,
-            sauce: maxStock
+            lettuce: maxStock,
+            cabbage: maxStock,
+            corn: maxStock,
+            sauce: maxStock,
+            falafel: maxStock,
+            yufka: maxStock,
+            doener: maxStock
         };
         // canvas = document.createElement("canvas");
         // canvas.setAttribute("width", "1300");
@@ -82,13 +89,61 @@ var DoenerDream;
         stockDiv.setAttribute("id", "stockDiv");
         body.appendChild(stockDiv);
         updateStockDiv();
+        statsDiv = document.createElement("div");
+        statsDiv.setAttribute("id", "statsDiv");
+        body.appendChild(statsDiv);
+        orderDiv = document.createElement("div");
+        orderDiv.setAttribute("id", "orderDiv");
+        body.appendChild(orderDiv);
+        updateOrderDiv(["onions", "cabbage", "lettuce"]);
         startGame();
+    }
+    function updateOrderDiv(_order) {
+        orderDiv.innerHTML = "";
+        let headline = document.createElement("p");
+        headline.innerHTML = "<b> Order <b>";
+        orderDiv.appendChild(headline);
+        for (let ingredient of _order) {
+            let paragraph = document.createElement("p");
+            paragraph.innerHTML = "- " + ingredient;
+            orderDiv.appendChild(paragraph);
+        }
+    }
+    function updateStatsDiv() {
+        statsDiv.innerHTML = "";
+        let amount = document.createElement("p");
+        amount.innerHTML = "Meals sold: " + soldMeals;
+        statsDiv.appendChild(amount);
+        let customerMood = document.createElement("p");
+        let mood = "none";
+        let moodIndex = 0;
+        if (DoenerDream.customers.length > 0) {
+            for (let customer of DoenerDream.customers) {
+                moodIndex += customer.moods.indexOf(customer.mood);
+            }
+            moodIndex = Math.floor(moodIndex / DoenerDream.customers.length);
+            mood = DoenerDream.customers[0].moods[moodIndex];
+        }
+        customerMood.innerHTML = "Average customer mood: " + mood;
+        statsDiv.appendChild(customerMood);
+        let staffMood = document.createElement("p");
+        mood = "none";
+        moodIndex = 0;
+        if (workers.length > 0) {
+            for (let staff of workers) {
+                moodIndex += staff.moods.indexOf(staff.mood);
+            }
+            moodIndex = Math.floor(moodIndex / workers.length);
+            mood = workers[0].moods[moodIndex];
+        }
+        staffMood.innerHTML = "Average staff mood: " + mood;
+        statsDiv.appendChild(staffMood);
     }
     function updateStockDiv() {
         stockDiv.innerHTML = "";
         for (let ingredient in DoenerDream.stock) {
             let paragraph = document.createElement("p");
-            paragraph.innerHTML = ingredient + ": " + DoenerDream.stock[ingredient];
+            paragraph.innerHTML = ingredient + ": " + DoenerDream.stock[ingredient] + " / " + maxStock;
             let restockButton = document.createElement("button");
             restockButton.setAttribute("id", ingredient);
             restockButton.innerHTML = "Restock";
@@ -106,38 +161,61 @@ var DoenerDream;
     }
     function startGame() {
         lastFrame = performance.now();
-        update();
-        setInterval(customerLeave, 4100);
+        setInterval(customerLeave, 9000);
         newCustomer();
-        window.setInterval(newCustomer, 3900);
+        // for (let i: number = 0; i < staffAmount; i++) {
+        let staff = new DoenerDream.Staff(staffRestingTime);
+        workers.push(staff);
+        // }
+        let loop = 0;
+        for (let ingredient in DoenerDream.stock) {
+            let container = new DoenerDream.Container(ingredient, containerCapacity);
+            if (loop == 4) {
+                container.position.y += loop * 2 * 85;
+            }
+            else {
+                container.position.y += loop * 85;
+            }
+            containers.push(container);
+            loop += 1;
+        }
+        DoenerDream.plate = new DoenerDream.Plate();
+        update();
+        window.setInterval(newCustomer, customerSpawnRate * 1000);
     }
     function hndCanvasClick(_event) {
         // 
     }
     // test Functions
     function newCustomer() {
-        if (DoenerDream.test.length < 5) {
-            DoenerDream.test.push(new DoenerDream.Customer(new DoenerDream.Vector(customerSpawnPoint.x, customerSpawnPoint.y)));
+        if (DoenerDream.customers.length < 5) {
+            DoenerDream.customers.push(new DoenerDream.Customer(new DoenerDream.Vector(customerSpawnPoint.x, customerSpawnPoint.y)));
         }
     }
     function customerLeave() {
-        DoenerDream.test[0].receiveFood();
+        DoenerDream.customers[0].receiveFood();
     }
     function update() {
         DoenerDream.crc2.putImageData(background, 0, 0);
         let frameTime = performance.now() - lastFrame;
         lastFrame = performance.now();
-        for (let person of DoenerDream.test) {
-            person.move(frameTime / 1000);
-            person.draw();
+        for (let customer of DoenerDream.customers) {
+            customer.move(frameTime / 1000);
+            customer.draw();
         }
+        for (let container of containers) {
+            container.draw();
+        }
+        DoenerDream.plate.draw();
+        updateStatsDiv();
         window.requestAnimationFrame(update);
     }
     function removeCustomer(_customer) {
-        DoenerDream.test.splice(DoenerDream.test.indexOf(_customer), 1);
+        DoenerDream.customers.splice(DoenerDream.customers.indexOf(_customer), 1);
     }
     DoenerDream.removeCustomer = removeCustomer;
     function drawBackground() {
+        DoenerDream.crc2.save();
         DoenerDream.crc2.fillStyle = "saddlebrown";
         DoenerDream.crc2.fillRect(0, 0, DoenerDream.crc2.canvas.width, DoenerDream.crc2.canvas.height);
         DoenerDream.crc2.fillStyle = "black";
@@ -146,6 +224,7 @@ var DoenerDream;
         DoenerDream.crc2.fillRect(DoenerDream.middle.x + (DoenerDream.middle.x / 2), 0, DoenerDream.middle.x / 2, DoenerDream.crc2.canvas.height);
         DoenerDream.crc2.fillStyle = "lightgrey";
         DoenerDream.crc2.fillRect(DoenerDream.crc2.canvas.width - DoenerDream.middle.x / 6, 0, DoenerDream.middle.x / 6, DoenerDream.middle.y);
+        DoenerDream.crc2.restore();
     }
 })(DoenerDream || (DoenerDream = {}));
 //# sourceMappingURL=Main.js.map

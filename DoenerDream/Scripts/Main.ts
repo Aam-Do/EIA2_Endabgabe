@@ -25,17 +25,18 @@ namespace DoenerDream {
     export let customers: Customer[] = [];
     let workers: Staff[] = [];
     let containers: Container[] = [];
+    let soldMeals: number = 0;
     export let plate: Plate;
     export interface Stock {
         [key: string]: number;
     }
     export let stock: Stock;
     let stockDiv: HTMLDivElement;
+    let statsDiv: HTMLDivElement;
     let orderDiv: HTMLDivElement;
     let lastFrame: number;
     let canvas: HTMLCanvasElement;
     let body: HTMLBodyElement;
-    export let test: Customer[] = [];
 
     export function calculateRandom(_min: number, _max: number): number {
         let random: number = (Math.random() * (_max - _min)) + _min;
@@ -62,6 +63,9 @@ namespace DoenerDream {
         //     cabbage: maxStock,
         //     corn: maxStock,
         //     sauce: maxStock
+        // falafel: maxStock,
+        // yufkaBread: maxStock,
+        // doenerBread: maxStock
         // };
 
         staffRestingTime = 6;
@@ -71,10 +75,13 @@ namespace DoenerDream {
         containerCapacity = 20;
         stock = {
             onions: maxStock,
-            lettuce: 30,
-            cabbage: 30,
-            corn: 30,
-            sauce: maxStock
+            lettuce: maxStock,
+            cabbage: maxStock,
+            corn: maxStock,
+            sauce: maxStock,
+            falafel: maxStock,
+            yufka: maxStock,
+            doener: maxStock
         };
 
         // canvas = document.createElement("canvas");
@@ -103,14 +110,68 @@ namespace DoenerDream {
         body.appendChild(stockDiv);
         updateStockDiv();
 
+        statsDiv = document.createElement("div");
+        statsDiv.setAttribute("id", "statsDiv");
+        body.appendChild(statsDiv);
+
+        orderDiv = document.createElement("div");
+        orderDiv.setAttribute("id", "orderDiv");
+        body.appendChild(orderDiv);
+        updateOrderDiv(["onions", "cabbage", "lettuce"]);
+
         startGame();
+    }
+
+    function updateOrderDiv(_order: string[]): void {
+        orderDiv.innerHTML = "";
+        let headline: HTMLParagraphElement = document.createElement("p");
+        headline.innerHTML = "<b> Order <b>";
+        orderDiv.appendChild(headline);
+        for (let ingredient of _order) {
+            let paragraph: HTMLParagraphElement = document.createElement("p");
+            paragraph.innerHTML = "- " + ingredient;
+            orderDiv.appendChild(paragraph);
+        }
+    }
+
+    function updateStatsDiv(): void {
+        statsDiv.innerHTML = "";
+        let amount: HTMLParagraphElement = document.createElement("p");
+        amount.innerHTML = "Meals sold: " + soldMeals;
+        statsDiv.appendChild(amount);
+
+        let customerMood: HTMLParagraphElement = document.createElement("p");
+        let mood: string = "none";
+        let moodIndex: number = 0;
+        if (customers.length > 0) {
+            for (let customer of customers) {
+                moodIndex += customer.moods.indexOf(customer.mood);
+            }
+            moodIndex = Math.floor(moodIndex / customers.length);
+            mood = customers[0].moods[moodIndex];
+        }
+        customerMood.innerHTML = "Average customer mood: " + mood;
+        statsDiv.appendChild(customerMood);
+
+        let staffMood: HTMLParagraphElement = document.createElement("p");
+        mood = "none";
+        moodIndex = 0;
+        if (workers.length > 0) {
+            for (let staff of workers) {
+                moodIndex += staff.moods.indexOf(staff.mood);
+            }
+            moodIndex = Math.floor(moodIndex / workers.length);
+            mood = workers[0].moods[moodIndex];
+        }
+        staffMood.innerHTML = "Average staff mood: " + mood;
+        statsDiv.appendChild(staffMood);
     }
 
     function updateStockDiv(): void {
         stockDiv.innerHTML = "";
         for (let ingredient in stock) {
             let paragraph: HTMLParagraphElement = document.createElement("p");
-            paragraph.innerHTML = ingredient + ": " + stock[ingredient];
+            paragraph.innerHTML = ingredient + ": " + stock[ingredient] + " / " + maxStock;
             let restockButton: HTMLButtonElement = document.createElement("button");
             restockButton.setAttribute("id", ingredient);
             restockButton.innerHTML = "Restock";
@@ -125,17 +186,32 @@ namespace DoenerDream {
     function restock(_event: MouseEvent): void {
         let target: HTMLButtonElement = <HTMLButtonElement>_event.target;
         target.setAttribute("disabled", "true");
-        setTimeout(function (): void {stock[target.id] = maxStock; updateStockDiv(); }, 5000);
-        
+        setTimeout(function (): void { stock[target.id] = maxStock; updateStockDiv(); }, 5000);
     }
 
     function startGame(): void {
         lastFrame = performance.now();
-        update();
-
-        setInterval(customerLeave, 4100);
+        setInterval(customerLeave, 9000);
         newCustomer();
-        window.setInterval(newCustomer, 3900);
+        // for (let i: number = 0; i < staffAmount; i++) {
+        let staff: Staff = new Staff(staffRestingTime);
+        workers.push(staff);
+        // }
+        let loop: number = 0;
+        for (let ingredient in stock) {
+            let container: Container = new Container(ingredient, containerCapacity);
+            if (loop == 4) {
+                container.position.y += loop * 2 * 85;
+            }
+            else {
+                container.position.y += loop * 85;
+            }
+            containers.push(container);
+            loop += 1;
+        }
+        plate = new Plate();
+        update();
+        window.setInterval(newCustomer, customerSpawnRate * 1000);
     }
 
     function hndCanvasClick(_event: MouseEvent): void {
@@ -145,32 +221,38 @@ namespace DoenerDream {
     // test Functions
 
     function newCustomer(): void {
-        if (test.length < 5) {
-            test.push(new Customer(new Vector(customerSpawnPoint.x, customerSpawnPoint.y)));
+        if (customers.length < 5) {
+            customers.push(new Customer(new Vector(customerSpawnPoint.x, customerSpawnPoint.y)));
         }
     }
 
     function customerLeave(): void {
-        test[0].receiveFood();
+        customers[0].receiveFood();
     }
 
     function update(): void {
         crc2.putImageData(background, 0, 0);
         let frameTime: number = performance.now() - lastFrame;
         lastFrame = performance.now();
-        for (let person of test) {
-            person.move(frameTime / 1000);
-            person.draw();
+        for (let customer of customers) {
+            customer.move(frameTime / 1000);
+            customer.draw();
         }
+        for (let container of containers) {
+            container.draw();
+        }
+        plate.draw();
+        updateStatsDiv();
         window.requestAnimationFrame(update);
     }
 
     export function removeCustomer(_customer: Customer): void {
-        test.splice(test.indexOf(_customer), 1);
+        customers.splice(customers.indexOf(_customer), 1);
 
     }
 
     function drawBackground(): void {
+        crc2.save();
         crc2.fillStyle = "saddlebrown";
         crc2.fillRect(0, 0, crc2.canvas.width, crc2.canvas.height);
 
@@ -182,6 +264,7 @@ namespace DoenerDream {
 
         crc2.fillStyle = "lightgrey";
         crc2.fillRect(crc2.canvas.width - middle.x / 6, 0, middle.x / 6, middle.y);
+        crc2.restore();
     }
 
 }
