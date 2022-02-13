@@ -11,10 +11,10 @@ var DoenerDream;
         TASK[TASK["RETURNING"] = 5] = "RETURNING";
         TASK[TASK["WAITING"] = 6] = "WAITING";
         TASK[TASK["RECOVERING"] = 7] = "RECOVERING";
-    })(TASK || (TASK = {}));
+    })(TASK = DoenerDream.TASK || (DoenerDream.TASK = {}));
     class Staff extends DoenerDream.Human {
         constructor(_restingTime) {
-            super(new DoenerDream.Vector(600, 400));
+            super(new DoenerDream.Vector(800, 400));
             this.moods = ["burnout", "stressed", "content", "bored", "sleeping"];
             this.mood = "content";
             this.task = TASK.WAITING;
@@ -72,7 +72,6 @@ var DoenerDream;
             _container.amount -= 1;
         }
         updateMood(_addend) {
-            console.log(this);
             if (this.moods.indexOf(this.mood) >= 0) {
                 clearInterval(setInterval(this.updateMood.bind(this)));
                 let currentTask = this.task;

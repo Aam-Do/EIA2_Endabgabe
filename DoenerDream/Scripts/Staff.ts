@@ -1,6 +1,6 @@
 namespace DoenerDream {
 
-    enum TASK {
+    export enum TASK {
         BAR,
         GOINGTOCONTAINER,
         GOINGTOKITCHEN,
@@ -20,7 +20,7 @@ namespace DoenerDream {
         private originalPosition: Vector;
 
         public constructor(_restingTime: number) {
-            super(new Vector(600, 400));
+            super(new Vector(800, 400));
             this.mood = "content";
             this.task = TASK.WAITING;
             this.originalPosition = new Vector(600, 400);
@@ -81,7 +81,6 @@ namespace DoenerDream {
         }
 
         protected updateMood(_addend: number): void {
-            console.log(this);
             if (this.moods.indexOf(this.mood) >= 0) {
                 clearInterval(setInterval(this.updateMood.bind(this)));
                 let currentTask: TASK = this.task;

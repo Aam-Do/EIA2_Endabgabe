@@ -161,11 +161,12 @@ var DoenerDream;
     }
     function startGame() {
         lastFrame = performance.now();
-        setInterval(customerLeave, 9000);
+        // setInterval(customerLeave, 9000);
         newCustomer();
         // for (let i: number = 0; i < staffAmount; i++) {
         let staff = new DoenerDream.Staff(staffRestingTime);
         workers.push(staff);
+        staff.task = DoenerDream.TASK.BAR;
         // }
         let loop = 0;
         for (let ingredient in DoenerDream.stock) {
@@ -181,10 +182,33 @@ var DoenerDream;
         }
         DoenerDream.plate = new DoenerDream.Plate();
         update();
-        window.setInterval(newCustomer, customerSpawnRate * 1000);
+        // window.setInterval(newCustomer, customerSpawnRate * 1000);
     }
     function hndCanvasClick(_event) {
-        // 
+        let object = _event.target;
+        let rect = object.getBoundingClientRect();
+        let scaling = new DoenerDream.Vector(DoenerDream.crc2.canvas.height / rect.height, DoenerDream.crc2.canvas.width / rect.width);
+        let pointer = new DoenerDream.Vector((_event.clientX - rect.left) * scaling.x, (_event.clientY - rect.top) * scaling.x);
+        let target;
+        for (let container of containers) {
+            if (container.position.x < pointer.x && pointer.x < container.position.x + 90 && pointer.y > container.position.y && pointer.y < container.position.y + 70) {
+                target = container;
+            }
+        }
+        // for (let staff of workers) {
+        // }
+        if (target instanceof DoenerDream.Container) {
+            if (target.amount > 0) {
+                let barStaff;
+                for (let staff of workers) {
+                    if (staff.task == DoenerDream.TASK.BAR)
+                        barStaff = staff;
+                }
+                if (barStaff)
+                    barStaff.fillPlate(target);
+            }
+        }
+        console.log(DoenerDream.plate.contents, target);
     }
     // test Functions
     function newCustomer() {
@@ -205,6 +229,10 @@ var DoenerDream;
         }
         for (let container of containers) {
             container.draw();
+        }
+        for (let staff of workers) {
+            staff.move(frameTime / 1000);
+            staff.draw();
         }
         DoenerDream.plate.draw();
         updateStatsDiv();

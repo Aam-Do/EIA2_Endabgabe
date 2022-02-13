@@ -191,11 +191,12 @@ namespace DoenerDream {
 
     function startGame(): void {
         lastFrame = performance.now();
-        setInterval(customerLeave, 9000);
+        // setInterval(customerLeave, 9000);
         newCustomer();
         // for (let i: number = 0; i < staffAmount; i++) {
         let staff: Staff = new Staff(staffRestingTime);
         workers.push(staff);
+        staff.task = TASK.BAR;
         // }
         let loop: number = 0;
         for (let ingredient in stock) {
@@ -211,11 +212,36 @@ namespace DoenerDream {
         }
         plate = new Plate();
         update();
-        window.setInterval(newCustomer, customerSpawnRate * 1000);
+        // window.setInterval(newCustomer, customerSpawnRate * 1000);
     }
 
     function hndCanvasClick(_event: MouseEvent): void {
-        // 
+        let object: HTMLElement = <HTMLElement>_event.target;
+        let rect: DOMRect = object.getBoundingClientRect();
+        let scaling: Vector = new Vector(crc2.canvas.height / rect.height, crc2.canvas.width / rect.width);
+        let pointer: Vector = new Vector((_event.clientX - rect.left) * scaling.x, (_event.clientY - rect.top) * scaling.x);
+
+        let target: Staff | Plate | Container | undefined;
+        for (let container of containers) {
+            if (container.position.x < pointer.x && pointer.x < container.position.x + 90 && pointer.y > container.position.y && pointer.y < container.position.y + 70) {
+                target = container;
+            }
+        }
+        // for (let staff of workers) {
+
+        // }
+        if (target instanceof Container) {
+            if (target.amount > 0) {
+                let barStaff: Staff | undefined;
+                for (let staff of workers) {
+                    if (staff.task == TASK.BAR)
+                        barStaff = staff;
+                }
+                if (barStaff)
+                    barStaff.fillPlate(target);
+            }
+        }
+        console.log(plate.contents, target);
     }
 
     // test Functions
@@ -240,6 +266,10 @@ namespace DoenerDream {
         }
         for (let container of containers) {
             container.draw();
+        }
+        for (let staff of workers) {
+            staff.move(frameTime / 1000);
+            staff.draw();
         }
         plate.draw();
         updateStatsDiv();

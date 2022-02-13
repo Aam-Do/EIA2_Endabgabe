@@ -44,8 +44,6 @@ namespace DoenerDream {
                     if (this.position.y > crc2.canvas.height + 50)
                     removeCustomer(this);
             }
-
-            
         }
 
         public receiveFood(): void {
