@@ -182,7 +182,7 @@ var DoenerDream;
         }
         DoenerDream.plate = new DoenerDream.Plate();
         update();
-        // window.setInterval(newCustomer, customerSpawnRate * 1000);
+        window.setInterval(newCustomer, customerSpawnRate * 1000);
     }
     function hndCanvasClick(_event) {
         let object = _event.target;
@@ -197,6 +197,8 @@ var DoenerDream;
         }
         // for (let staff of workers) {
         // }
+        if (35 >= new DoenerDream.Vector(DoenerDream.plate.position.x - pointer.x, DoenerDream.plate.position.y - pointer.y).length)
+            target = DoenerDream.plate;
         if (target instanceof DoenerDream.Container) {
             if (target.amount > 0) {
                 let barStaff;
@@ -208,6 +210,14 @@ var DoenerDream;
                     barStaff.fillPlate(target);
             }
         }
+        else if (target instanceof DoenerDream.Plate) {
+            for (let customer of DoenerDream.customers) {
+                if (customer.state == DoenerDream.STATE.WAITING) {
+                    customer.receiveFood(target.contents);
+                    DoenerDream.plate.contents = [];
+                }
+            }
+        }
         console.log(DoenerDream.plate.contents, target);
     }
     // test Functions
@@ -215,9 +225,6 @@ var DoenerDream;
         if (DoenerDream.customers.length < 5) {
             DoenerDream.customers.push(new DoenerDream.Customer(new DoenerDream.Vector(customerSpawnPoint.x, customerSpawnPoint.y)));
         }
-    }
-    function customerLeave() {
-        DoenerDream.customers[0].receiveFood();
     }
     function update() {
         DoenerDream.crc2.putImageData(background, 0, 0);

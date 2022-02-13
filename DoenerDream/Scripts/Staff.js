@@ -72,18 +72,20 @@ var DoenerDream;
             _container.amount -= 1;
         }
         updateMood(_addend) {
-            if (this.moods.indexOf(this.mood) >= 0) {
-                clearInterval(setInterval(this.updateMood.bind(this)));
-                let currentTask = this.task;
-                this.task = TASK.RECOVERING;
-                this.velocity.set(0, 0);
-                setTimeout(this.resumeTask, this.restingTime * 2, currentTask);
-            }
-            else if (this.moods.indexOf(this.mood) == this.moods.length - 1 && _addend > 0) {
-                // 
-            }
-            else {
-                super.updateMood(_addend);
+            if (this.task != TASK.BAR) {
+                if (this.moods.indexOf(this.mood) == 0) {
+                    clearInterval(setInterval(this.updateMood.bind(this)));
+                    let currentTask = this.task;
+                    this.task = TASK.RECOVERING;
+                    this.velocity.set(0, 0);
+                    setTimeout(this.resumeTask, this.restingTime * 2, currentTask);
+                }
+                else if (this.moods.indexOf(this.mood) == this.moods.length - 1 && _addend > 0) {
+                    // 
+                }
+                else {
+                    super.updateMood(_addend);
+                }
             }
         }
         resumeTask(_task) {

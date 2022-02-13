@@ -16,12 +16,14 @@ var DoenerDream;
             DoenerDream.crc2.restore();
         }
         updateMood(_addend) {
-            if (_addend < 0)
-                if (this.moods.indexOf(this.mood) > 0)
-                    this.mood = this.moods[this.moods.indexOf(this.mood) + _addend];
-                else {
+            if (_addend < 0) {
+                if (this.moods.indexOf(this.mood) > 0) {
                     this.mood = this.moods[this.moods.indexOf(this.mood) + _addend];
                 }
+            }
+            else {
+                this.mood = this.moods[this.moods.indexOf(this.mood) + _addend];
+            }
         }
     }
     DoenerDream.Human = Human;

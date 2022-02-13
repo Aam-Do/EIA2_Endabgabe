@@ -1,6 +1,6 @@
 namespace DoenerDream {
 
-    enum STATE {
+    export enum STATE {
         INQUEUE,
         WAITING,
         LEAVING
@@ -46,7 +46,9 @@ namespace DoenerDream {
             }
         }
 
-        public receiveFood(): void {
+        public receiveFood(_plate: string[]): void {
+            // clearInterval()
+            
             this.velocity.set(0, 150);
             this.state = STATE.LEAVING;
         }

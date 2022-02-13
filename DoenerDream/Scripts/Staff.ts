@@ -81,18 +81,20 @@ namespace DoenerDream {
         }
 
         protected updateMood(_addend: number): void {
-            if (this.moods.indexOf(this.mood) >= 0) {
-                clearInterval(setInterval(this.updateMood.bind(this)));
-                let currentTask: TASK = this.task;
-                this.task = TASK.RECOVERING;
-                this.velocity.set(0, 0);
-                setTimeout(this.resumeTask, this.restingTime * 2, currentTask);
-            }
-            else if (this.moods.indexOf(this.mood) == this.moods.length - 1 && _addend > 0) {
-                // 
-            }
-            else {
-                super.updateMood(_addend);
+            if (this.task != TASK.BAR) {
+                if (this.moods.indexOf(this.mood) == 0) {
+                    clearInterval(setInterval(this.updateMood.bind(this)));
+                    let currentTask: TASK = this.task;
+                    this.task = TASK.RECOVERING;
+                    this.velocity.set(0, 0);
+                    setTimeout(this.resumeTask, this.restingTime * 2, currentTask);
+                }
+                else if (this.moods.indexOf(this.mood) == this.moods.length - 1 && _addend > 0) {
+                    // 
+                }
+                else {
+                    super.updateMood(_addend);
+                }
             }
         }
 

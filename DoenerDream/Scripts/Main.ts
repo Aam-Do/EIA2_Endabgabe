@@ -212,7 +212,7 @@ namespace DoenerDream {
         }
         plate = new Plate();
         update();
-        // window.setInterval(newCustomer, customerSpawnRate * 1000);
+        window.setInterval(newCustomer, customerSpawnRate * 1000);
     }
 
     function hndCanvasClick(_event: MouseEvent): void {
@@ -230,6 +230,8 @@ namespace DoenerDream {
         // for (let staff of workers) {
 
         // }
+        if (35 >= new Vector(plate.position.x - pointer.x, plate.position.y - pointer.y).length)
+            target = plate;
         if (target instanceof Container) {
             if (target.amount > 0) {
                 let barStaff: Staff | undefined;
@@ -241,6 +243,14 @@ namespace DoenerDream {
                     barStaff.fillPlate(target);
             }
         }
+        else if (target instanceof Plate) {
+            for (let customer of customers) {
+                if (customer.state == STATE.WAITING) {
+                    customer.receiveFood(target.contents);
+                    plate.contents = [];
+                }
+            }
+        }
         console.log(plate.contents, target);
     }
 
@@ -250,10 +260,6 @@ namespace DoenerDream {
         if (customers.length < 5) {
             customers.push(new Customer(new Vector(customerSpawnPoint.x, customerSpawnPoint.y)));
         }
-    }
-
-    function customerLeave(): void {
-        customers[0].receiveFood();
     }
 
     function update(): void {

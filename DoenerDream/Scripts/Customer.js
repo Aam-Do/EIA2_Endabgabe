@@ -6,7 +6,7 @@ var DoenerDream;
         STATE[STATE["INQUEUE"] = 0] = "INQUEUE";
         STATE[STATE["WAITING"] = 1] = "WAITING";
         STATE[STATE["LEAVING"] = 2] = "LEAVING";
-    })(STATE || (STATE = {}));
+    })(STATE = DoenerDream.STATE || (DoenerDream.STATE = {}));
     class Customer extends DoenerDream.Human {
         constructor(_position) {
             super(_position);
@@ -41,7 +41,8 @@ var DoenerDream;
                         DoenerDream.removeCustomer(this);
             }
         }
-        receiveFood() {
+        receiveFood(_plate) {
+            // clearInterval()
             this.velocity.set(0, 150);
             this.state = STATE.LEAVING;
         }
