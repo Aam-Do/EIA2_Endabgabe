@@ -109,6 +109,7 @@ var DoenerDream;
             orderDiv.appendChild(paragraph);
         }
     }
+    DoenerDream.updateOrderDiv = updateOrderDiv;
     function updateStatsDiv() {
         statsDiv.innerHTML = "";
         let amount = document.createElement("p");
@@ -215,6 +216,7 @@ var DoenerDream;
                 if (customer.state == DoenerDream.STATE.WAITING) {
                     customer.receiveFood(target.contents);
                     DoenerDream.plate.contents = [];
+                    soldMeals += 1;
                 }
             }
         }
@@ -222,7 +224,7 @@ var DoenerDream;
     }
     // test Functions
     function newCustomer() {
-        if (DoenerDream.customers.length < 5) {
+        if (DoenerDream.customers.length < 4) {
             DoenerDream.customers.push(new DoenerDream.Customer(new DoenerDream.Vector(customerSpawnPoint.x, customerSpawnPoint.y)));
         }
     }

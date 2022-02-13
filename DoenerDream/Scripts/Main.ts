@@ -122,7 +122,7 @@ namespace DoenerDream {
         startGame();
     }
 
-    function updateOrderDiv(_order: string[]): void {
+    export function updateOrderDiv(_order: string[]): void {
         orderDiv.innerHTML = "";
         let headline: HTMLParagraphElement = document.createElement("p");
         headline.innerHTML = "<b> Order <b>";
@@ -248,6 +248,7 @@ namespace DoenerDream {
                 if (customer.state == STATE.WAITING) {
                     customer.receiveFood(target.contents);
                     plate.contents = [];
+                    soldMeals += 1;
                 }
             }
         }
@@ -257,7 +258,7 @@ namespace DoenerDream {
     // test Functions
 
     function newCustomer(): void {
-        if (customers.length < 5) {
+        if (customers.length < 4) {
             customers.push(new Customer(new Vector(customerSpawnPoint.x, customerSpawnPoint.y)));
         }
     }

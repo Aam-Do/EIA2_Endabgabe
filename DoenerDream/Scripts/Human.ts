@@ -9,20 +9,22 @@ namespace DoenerDream {
 
         public draw(): void {
             crc2.save();
-            crc2.fillStyle = "yellow";
             crc2.translate(this.position.x, this.position.y);
-            crc2.beginPath();
-            crc2.arc(0, 0, 30, 0, 360);
-            crc2.closePath();
-            crc2.fill();
+            drawHuman(this.mood);
             crc2.restore();
         }
 
         protected updateMood(_addend: number): void {
             if (_addend < 0) {
-                if (this.moods.indexOf(this.mood) > 0) {
+                if (this.moods.indexOf(this.mood) + _addend >= 0) {
                     this.mood = this.moods[this.moods.indexOf(this.mood) + _addend];
                 }
+                else {
+                    this.mood = this.moods[0];
+                }
+            }
+            else if (this.moods.indexOf(this.mood) + _addend >= this.moods.length) {
+                this.mood = this.moods[this.moods.length];
             }
             else {
                 this.mood = this.moods[this.moods.indexOf(this.mood) + _addend];
