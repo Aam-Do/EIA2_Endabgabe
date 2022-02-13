@@ -2,6 +2,7 @@ namespace DoenerDream {
     export abstract class Human extends Moveable {
         public abstract moods: string[];
         public mood: string;
+        protected intervalId: number;
 
         protected constructor(_position: Vector) {
             super(_position);

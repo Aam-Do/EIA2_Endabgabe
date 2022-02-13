@@ -54,7 +54,7 @@ var DoenerDream;
         // yufkaBread: maxStock,
         // doenerBread: maxStock
         // };
-        staffRestingTime = 6;
+        staffRestingTime = 10;
         staffAmount = 3;
         customerSpawnRate = 8;
         maxStock = 60;
@@ -95,7 +95,7 @@ var DoenerDream;
         orderDiv = document.createElement("div");
         orderDiv.setAttribute("id", "orderDiv");
         body.appendChild(orderDiv);
-        updateOrderDiv(["onions", "cabbage", "lettuce"]);
+        updateOrderDiv([]);
         startGame();
     }
     function updateOrderDiv(_order) {
@@ -155,6 +155,7 @@ var DoenerDream;
             stockDiv.appendChild(paragraph);
         }
     }
+    DoenerDream.updateStockDiv = updateStockDiv;
     function restock(_event) {
         let target = _event.target;
         target.setAttribute("disabled", "true");
@@ -162,13 +163,15 @@ var DoenerDream;
     }
     function startGame() {
         lastFrame = performance.now();
-        // setInterval(customerLeave, 9000);
         newCustomer();
-        // for (let i: number = 0; i < staffAmount; i++) {
-        let staff = new DoenerDream.Staff(staffRestingTime);
-        workers.push(staff);
-        staff.task = DoenerDream.TASK.BAR;
-        // }
+        for (let i = 0; i < staffAmount; i++) {
+            let staff = new DoenerDream.Staff(staffRestingTime);
+            workers.push(staff);
+            if (i == 0) {
+                staff.position = new DoenerDream.Vector(750, DoenerDream.middle.y);
+                staff.task = DoenerDream.TASK.BAR;
+            }
+        }
         let loop = 0;
         for (let ingredient in DoenerDream.stock) {
             let container = new DoenerDream.Container(ingredient, containerCapacity);
@@ -193,22 +196,45 @@ var DoenerDream;
         let target;
         for (let container of containers) {
             if (container.position.x < pointer.x && pointer.x < container.position.x + 90 && pointer.y > container.position.y && pointer.y < container.position.y + 70) {
-                target = container;
+                let targeted = false;
+                for (let staff of workers) {
+                    if (staff.target == container)
+                        targeted = true;
+                }
+                if (targeted == false)
+                    target = container;
             }
         }
-        // for (let staff of workers) {
-        // }
+        for (let staff of workers) {
+            if (30 >= new DoenerDream.Vector(staff.position.x - pointer.x, staff.position.y - pointer.y).length && staff.task == DoenerDream.TASK.WAITING) {
+                staff.active = true;
+                target = staff;
+                console.log(staff);
+            }
+        }
         if (35 >= new DoenerDream.Vector(DoenerDream.plate.position.x - pointer.x, DoenerDream.plate.position.y - pointer.y).length)
             target = DoenerDream.plate;
         if (target instanceof DoenerDream.Container) {
-            if (target.amount > 0) {
-                let barStaff;
-                for (let staff of workers) {
-                    if (staff.task == DoenerDream.TASK.BAR)
-                        barStaff = staff;
+            let activeStaff;
+            for (let staff of workers) {
+                if (staff.active == true) {
+                    activeStaff = staff;
+                    staff.refill(target);
+                    staff.active = false;
+                    console.log(target);
                 }
-                if (barStaff)
-                    barStaff.fillPlate(target);
+            }
+            if (activeStaff == undefined) {
+                if (target.amount > 0) {
+                    let barStaff;
+                    for (let staff of workers) {
+                        if (staff.task == DoenerDream.TASK.BAR)
+                            barStaff = staff;
+                    }
+                    if (barStaff)
+                        barStaff.fillPlate(target);
+                    console.log("added " + target.ingredient);
+                }
             }
         }
         else if (target instanceof DoenerDream.Plate) {
@@ -220,9 +246,13 @@ var DoenerDream;
                 }
             }
         }
-        console.log(DoenerDream.plate.contents, target);
+        else if (target == undefined) {
+            for (let staff of workers) {
+                if (staff.active == true)
+                    staff.active = false;
+            }
+        }
     }
-    // test Functions
     function newCustomer() {
         if (DoenerDream.customers.length < 4) {
             DoenerDream.customers.push(new DoenerDream.Customer(new DoenerDream.Vector(customerSpawnPoint.x, customerSpawnPoint.y)));

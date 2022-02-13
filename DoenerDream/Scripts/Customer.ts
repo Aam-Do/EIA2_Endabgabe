@@ -15,12 +15,25 @@ namespace DoenerDream {
             super(_position);
             this.velocity.set(150, 0);
             this.mood = this.moods[Math.round(calculateRandom(3, 4))];
-            this.order = ["yufka", "corn", "lettuce", "cabbage", "onions", "sauce", "falafel"];
-            // for (let order in stock) {
-
-            // }
+            this.order = [];
+            for (let i: number = 0; i < calculateRandom(2, 7); i++) {
+                let unique: boolean = true;
+                let keys: string[] = Object.keys(stock);
+                let order: string;
+                do {
+                    order = keys[Math.floor(Math.random() * keys.length)];
+                    if (this.order.includes(order)) {
+                        unique = false;
+                    }
+                    else {
+                        unique = true;
+                    }
+                }
+                while (unique == false);
+                this.order.push(order);
+            }
             this.state = STATE.INQUEUE;
-            setInterval(this.updateMood.bind(this), 10000);
+            this.intervalId = setInterval(this.updateMood.bind(this), 10000);
         }
 
         public move(_timeslice: number): void {
@@ -51,7 +64,7 @@ namespace DoenerDream {
         }
 
         public receiveFood(_plate: string[]): void {
-            clearInterval(setInterval(this.updateMood));
+            clearInterval(this.intervalId);
             if (_plate.length == this.order.length) {
                 let overlap: number = 0;
                 for (let ingredient of this.order) {
@@ -72,21 +85,20 @@ namespace DoenerDream {
             else {
                 super.updateMood(-2);
             }
-
             this.velocity.set(0, 150);
             this.state = STATE.LEAVING;
+            updateOrderDiv([]);
         }
 
         protected updateMood(): void {
             if (this.moods.indexOf(this.mood) == 0) {
-                clearInterval(setInterval(this.updateMood));
+                clearInterval(this.intervalId);
                 this.velocity.set(0, 150);
                 this.state = STATE.LEAVING;
             }
             else {
                 super.updateMood(-1);
             }
-            console.log("updated customer mood");
         }
     }
 }

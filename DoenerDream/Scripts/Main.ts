@@ -68,7 +68,7 @@ namespace DoenerDream {
         // doenerBread: maxStock
         // };
 
-        staffRestingTime = 6;
+        staffRestingTime = 10;
         staffAmount = 3;
         customerSpawnRate = 8;
         maxStock = 60;
@@ -117,7 +117,7 @@ namespace DoenerDream {
         orderDiv = document.createElement("div");
         orderDiv.setAttribute("id", "orderDiv");
         body.appendChild(orderDiv);
-        updateOrderDiv(["onions", "cabbage", "lettuce"]);
+        updateOrderDiv([]);
 
         startGame();
     }
@@ -167,7 +167,7 @@ namespace DoenerDream {
         statsDiv.appendChild(staffMood);
     }
 
-    function updateStockDiv(): void {
+    export function updateStockDiv(): void {
         stockDiv.innerHTML = "";
         for (let ingredient in stock) {
             let paragraph: HTMLParagraphElement = document.createElement("p");
@@ -191,13 +191,15 @@ namespace DoenerDream {
 
     function startGame(): void {
         lastFrame = performance.now();
-        // setInterval(customerLeave, 9000);
         newCustomer();
-        // for (let i: number = 0; i < staffAmount; i++) {
-        let staff: Staff = new Staff(staffRestingTime);
-        workers.push(staff);
-        staff.task = TASK.BAR;
-        // }
+        for (let i: number = 0; i < staffAmount; i++) {
+            let staff: Staff = new Staff(staffRestingTime);
+            workers.push(staff);
+            if (i == 0) {
+                staff.position = new Vector(750, middle.y);
+                staff.task = TASK.BAR;
+            }
+        }
         let loop: number = 0;
         for (let ingredient in stock) {
             let container: Container = new Container(ingredient, containerCapacity);
@@ -224,23 +226,45 @@ namespace DoenerDream {
         let target: Staff | Plate | Container | undefined;
         for (let container of containers) {
             if (container.position.x < pointer.x && pointer.x < container.position.x + 90 && pointer.y > container.position.y && pointer.y < container.position.y + 70) {
-                target = container;
+                let targeted: boolean = false;
+                for (let staff of workers) {
+                    if (staff.target == container)
+                        targeted = true;
+                }
+                if (targeted == false)
+                    target = container;
             }
         }
-        // for (let staff of workers) {
-
-        // }
+        for (let staff of workers) {
+            if (30 >= new Vector(staff.position.x - pointer.x, staff.position.y - pointer.y).length && staff.task == TASK.WAITING) {
+                staff.active = true;
+                target = staff;
+                console.log(staff);
+            }
+        }
         if (35 >= new Vector(plate.position.x - pointer.x, plate.position.y - pointer.y).length)
             target = plate;
         if (target instanceof Container) {
-            if (target.amount > 0) {
-                let barStaff: Staff | undefined;
-                for (let staff of workers) {
-                    if (staff.task == TASK.BAR)
-                        barStaff = staff;
+            let activeStaff: Staff | undefined;
+            for (let staff of workers) {
+                if (staff.active == true) {
+                    activeStaff = staff;
+                    staff.refill(target);
+                    staff.active = false;
+                    console.log(target);
                 }
-                if (barStaff)
-                    barStaff.fillPlate(target);
+            }
+            if (activeStaff == undefined) {
+                if (target.amount > 0) {
+                    let barStaff: Staff | undefined;
+                    for (let staff of workers) {
+                        if (staff.task == TASK.BAR)
+                            barStaff = staff;
+                    }
+                    if (barStaff)
+                        barStaff.fillPlate(target);
+                    console.log("added " + target.ingredient);
+                }
             }
         }
         else if (target instanceof Plate) {
@@ -252,10 +276,13 @@ namespace DoenerDream {
                 }
             }
         }
-        console.log(plate.contents, target);
+        else if (target == undefined) {
+            for (let staff of workers) {
+                if (staff.active == true)
+                    staff.active = false;
+            }
+        }
     }
-
-    // test Functions
 
     function newCustomer(): void {
         if (customers.length < 4) {

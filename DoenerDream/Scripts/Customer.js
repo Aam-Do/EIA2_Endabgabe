@@ -13,11 +13,24 @@ var DoenerDream;
             this.moods = ["pissed", "angry", "okay", "good", "happy", "ecstatic"];
             this.velocity.set(150, 0);
             this.mood = this.moods[Math.round(DoenerDream.calculateRandom(3, 4))];
-            this.order = ["yufka", "corn", "lettuce", "cabbage", "onions", "sauce", "falafel"];
-            // for (let order in stock) {
-            // }
+            this.order = [];
+            for (let i = 0; i < DoenerDream.calculateRandom(2, 7); i++) {
+                let unique = true;
+                let keys = Object.keys(DoenerDream.stock);
+                let order;
+                do {
+                    order = keys[Math.floor(Math.random() * keys.length)];
+                    if (this.order.includes(order)) {
+                        unique = false;
+                    }
+                    else {
+                        unique = true;
+                    }
+                } while (unique == false);
+                this.order.push(order);
+            }
             this.state = STATE.INQUEUE;
-            setInterval(this.updateMood.bind(this), 10000);
+            this.intervalId = setInterval(this.updateMood.bind(this), 10000);
         }
         move(_timeslice) {
             super.move(_timeslice);
@@ -45,7 +58,7 @@ var DoenerDream;
             }
         }
         receiveFood(_plate) {
-            clearInterval(setInterval(this.updateMood));
+            clearInterval(this.intervalId);
             if (_plate.length == this.order.length) {
                 let overlap = 0;
                 for (let ingredient of this.order) {
@@ -68,17 +81,17 @@ var DoenerDream;
             }
             this.velocity.set(0, 150);
             this.state = STATE.LEAVING;
+            DoenerDream.updateOrderDiv([]);
         }
         updateMood() {
             if (this.moods.indexOf(this.mood) == 0) {
-                clearInterval(setInterval(this.updateMood));
+                clearInterval(this.intervalId);
                 this.velocity.set(0, 150);
                 this.state = STATE.LEAVING;
             }
             else {
                 super.updateMood(-1);
             }
-            console.log("updated customer mood");
         }
     }
     DoenerDream.Customer = Customer;
