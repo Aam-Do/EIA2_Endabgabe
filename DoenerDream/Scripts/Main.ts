@@ -44,35 +44,18 @@ namespace DoenerDream {
     }
 
     function hndLoad(_event: Event): void {
-        // let startButton: HTMLButtonElement = <HTMLButtonElement>document.querySelector("#startButton");
-        // startButton.addEventListener("click", prepareGame);
-        prepareGame();
+        let startButton: HTMLButtonElement = <HTMLButtonElement>document.querySelector("#startButton");
+        startButton.addEventListener("click", prepareGame);
     }
 
     function prepareGame(): void {
-        // formData = new FormData(document.forms[0]);
+        formData = new FormData(document.forms[0]);
 
-        // staffRestingTime = Number(formData.get("restTime"));
-        // staffAmount = Number(formData.get("staffAmount"));
-        // customerSpawnRate = Number(formData.get("customerAmount"));
-        // maxStock = Number(formData.get("stockCapacity"));
-        // containerCapacity = Number(formData.get("containerCapacity"));
-        // stock = {
-        //     onions: maxStock,
-        //     lettuce: maxStock,
-        //     cabbage: maxStock,
-        //     corn: maxStock,
-        //     sauce: maxStock
-        // falafel: maxStock,
-        // yufkaBread: maxStock,
-        // doenerBread: maxStock
-        // };
-
-        staffRestingTime = 10;
-        staffAmount = 3;
-        customerSpawnRate = 8;
-        maxStock = 60;
-        containerCapacity = 20;
+        staffRestingTime = Number(formData.get("restTime")) * 1000;
+        staffAmount = Number(formData.get("staffAmount"));
+        customerSpawnRate = (60 / Number(formData.get("customerAmount"))) * 1000;
+        maxStock = Number(formData.get("stockCapacity"));
+        containerCapacity = Number(formData.get("containerCapacity"));
         stock = {
             onions: maxStock,
             lettuce: maxStock,
@@ -84,15 +67,31 @@ namespace DoenerDream {
             doener: maxStock
         };
 
-        // canvas = document.createElement("canvas");
-        // canvas.setAttribute("width", "1300");
-        // canvas.setAttribute("height", "800");
-        body = <HTMLBodyElement>document.querySelector("body");
-        // let form: HTMLFormElement = <HTMLFormElement>document.querySelector("form");
-        // body.removeChild(form);
-        // body.appendChild(canvas);
+        // staffRestingTime = 10;
+        // staffAmount = 3;
+        // customerSpawnRate = 8;
+        // maxStock = 60;
+        // containerCapacity = 20;
+        // stock = {
+        //     onions: maxStock,
+        //     lettuce: maxStock,
+        //     cabbage: maxStock,
+        //     corn: maxStock,
+        //     sauce: maxStock,
+        //     falafel: maxStock,
+        //     yufka: maxStock,
+        //     doener: maxStock
+        // };
 
-        canvas = <HTMLCanvasElement>document.querySelector("canvas");
+        canvas = document.createElement("canvas");
+        canvas.setAttribute("width", "1300");
+        canvas.setAttribute("height", "800");
+        body = <HTMLBodyElement>document.querySelector("body");
+        let form: HTMLFormElement = <HTMLFormElement>document.querySelector("form");
+        body.removeChild(form);
+        body.appendChild(canvas);
+
+        // canvas = <HTMLCanvasElement>document.querySelector("canvas");
 
         crc2 = canvas.getContext("2d")!;
         middle = new Vector(crc2.canvas.width / 2, crc2.canvas.height / 2);
@@ -214,7 +213,7 @@ namespace DoenerDream {
         }
         plate = new Plate();
         update();
-        window.setInterval(newCustomer, customerSpawnRate * 1000);
+        window.setInterval(newCustomer, customerSpawnRate);
     }
 
     function hndCanvasClick(_event: MouseEvent): void {

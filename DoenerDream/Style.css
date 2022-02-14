@@ -5,6 +5,20 @@ body, html {
     overflow: hidden;
 }
 
+form {
+    margin: auto;
+    width: 400px;
+}
+
+form p {
+    font-style: italic;
+    margin-top: 0px;
+}
+
+form button {
+    margin-left: 150px;
+}
+
 header {
     text-align: center;
 }

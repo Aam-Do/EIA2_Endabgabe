@@ -33,32 +33,16 @@ var DoenerDream;
     }
     DoenerDream.calculateRandom = calculateRandom;
     function hndLoad(_event) {
-        // let startButton: HTMLButtonElement = <HTMLButtonElement>document.querySelector("#startButton");
-        // startButton.addEventListener("click", prepareGame);
-        prepareGame();
+        let startButton = document.querySelector("#startButton");
+        startButton.addEventListener("click", prepareGame);
     }
     function prepareGame() {
-        // formData = new FormData(document.forms[0]);
-        // staffRestingTime = Number(formData.get("restTime"));
-        // staffAmount = Number(formData.get("staffAmount"));
-        // customerSpawnRate = Number(formData.get("customerAmount"));
-        // maxStock = Number(formData.get("stockCapacity"));
-        // containerCapacity = Number(formData.get("containerCapacity"));
-        // stock = {
-        //     onions: maxStock,
-        //     lettuce: maxStock,
-        //     cabbage: maxStock,
-        //     corn: maxStock,
-        //     sauce: maxStock
-        // falafel: maxStock,
-        // yufkaBread: maxStock,
-        // doenerBread: maxStock
-        // };
-        staffRestingTime = 10;
-        staffAmount = 3;
-        customerSpawnRate = 8;
-        maxStock = 60;
-        containerCapacity = 20;
+        formData = new FormData(document.forms[0]);
+        staffRestingTime = Number(formData.get("restTime")) * 1000;
+        staffAmount = Number(formData.get("staffAmount"));
+        customerSpawnRate = (60 / Number(formData.get("customerAmount"))) * 1000;
+        maxStock = Number(formData.get("stockCapacity"));
+        containerCapacity = Number(formData.get("containerCapacity"));
         DoenerDream.stock = {
             onions: maxStock,
             lettuce: maxStock,
@@ -69,14 +53,29 @@ var DoenerDream;
             yufka: maxStock,
             doener: maxStock
         };
-        // canvas = document.createElement("canvas");
-        // canvas.setAttribute("width", "1300");
-        // canvas.setAttribute("height", "800");
+        // staffRestingTime = 10;
+        // staffAmount = 3;
+        // customerSpawnRate = 8;
+        // maxStock = 60;
+        // containerCapacity = 20;
+        // stock = {
+        //     onions: maxStock,
+        //     lettuce: maxStock,
+        //     cabbage: maxStock,
+        //     corn: maxStock,
+        //     sauce: maxStock,
+        //     falafel: maxStock,
+        //     yufka: maxStock,
+        //     doener: maxStock
+        // };
+        canvas = document.createElement("canvas");
+        canvas.setAttribute("width", "1300");
+        canvas.setAttribute("height", "800");
         body = document.querySelector("body");
-        // let form: HTMLFormElement = <HTMLFormElement>document.querySelector("form");
-        // body.removeChild(form);
-        // body.appendChild(canvas);
-        canvas = document.querySelector("canvas");
+        let form = document.querySelector("form");
+        body.removeChild(form);
+        body.appendChild(canvas);
+        // canvas = <HTMLCanvasElement>document.querySelector("canvas");
         DoenerDream.crc2 = canvas.getContext("2d");
         DoenerDream.middle = new DoenerDream.Vector(DoenerDream.crc2.canvas.width / 2, DoenerDream.crc2.canvas.height / 2);
         DoenerDream.barPosition = new DoenerDream.Vector(DoenerDream.middle.x - 100, 0);
@@ -186,7 +185,7 @@ var DoenerDream;
         }
         DoenerDream.plate = new DoenerDream.Plate();
         update();
-        window.setInterval(newCustomer, customerSpawnRate * 1000);
+        window.setInterval(newCustomer, customerSpawnRate);
     }
     function hndCanvasClick(_event) {
         let object = _event.target;

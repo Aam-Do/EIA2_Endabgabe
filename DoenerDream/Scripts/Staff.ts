@@ -36,7 +36,7 @@ namespace DoenerDream {
             this.mood = "content";
             this.task = TASK.WAITING;
             this.originalPosition = this.position.copy();
-            this.restingTime = _restingTime * 1000;
+            this.restingTime = _restingTime;
             this.intervalId = setInterval(this.updateMood.bind(this), this.restingTime, 1);
         }
 
