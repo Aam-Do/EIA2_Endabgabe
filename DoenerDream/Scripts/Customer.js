@@ -88,6 +88,7 @@ var DoenerDream;
                 clearInterval(this.intervalId);
                 this.velocity.set(0, 150);
                 this.state = STATE.LEAVING;
+                DoenerDream.updateOrderDiv([]);
             }
             else {
                 super.updateMood(-1);
