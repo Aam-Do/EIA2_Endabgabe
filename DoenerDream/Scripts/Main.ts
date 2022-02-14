@@ -3,7 +3,6 @@ Aufgabe: Endabagbe Döner Trainer
 Name: Amélie Dell'Oro
 Matrikel: 268339
 Datum: 06.02.22
-Inspiration: Lena Lappe
 */
 
 namespace DoenerDream {
@@ -67,22 +66,6 @@ namespace DoenerDream {
             doener: maxStock
         };
 
-        // staffRestingTime = 10;
-        // staffAmount = 3;
-        // customerSpawnRate = 8;
-        // maxStock = 60;
-        // containerCapacity = 20;
-        // stock = {
-        //     onions: maxStock,
-        //     lettuce: maxStock,
-        //     cabbage: maxStock,
-        //     corn: maxStock,
-        //     sauce: maxStock,
-        //     falafel: maxStock,
-        //     yufka: maxStock,
-        //     doener: maxStock
-        // };
-
         canvas = document.createElement("canvas");
         canvas.setAttribute("width", "1300");
         canvas.setAttribute("height", "800");
@@ -90,8 +73,6 @@ namespace DoenerDream {
         let form: HTMLFormElement = <HTMLFormElement>document.querySelector("form");
         body.removeChild(form);
         body.appendChild(canvas);
-
-        // canvas = <HTMLCanvasElement>document.querySelector("canvas");
 
         crc2 = canvas.getContext("2d")!;
         middle = new Vector(crc2.canvas.width / 2, crc2.canvas.height / 2);

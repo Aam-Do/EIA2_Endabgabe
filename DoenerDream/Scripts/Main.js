@@ -4,7 +4,6 @@ Aufgabe: Endabagbe Döner Trainer
 Name: Amélie Dell'Oro
 Matrikel: 268339
 Datum: 06.02.22
-Inspiration: Lena Lappe
 */
 var DoenerDream;
 (function (DoenerDream) {
@@ -53,21 +52,6 @@ var DoenerDream;
             yufka: maxStock,
             doener: maxStock
         };
-        // staffRestingTime = 10;
-        // staffAmount = 3;
-        // customerSpawnRate = 8;
-        // maxStock = 60;
-        // containerCapacity = 20;
-        // stock = {
-        //     onions: maxStock,
-        //     lettuce: maxStock,
-        //     cabbage: maxStock,
-        //     corn: maxStock,
-        //     sauce: maxStock,
-        //     falafel: maxStock,
-        //     yufka: maxStock,
-        //     doener: maxStock
-        // };
         canvas = document.createElement("canvas");
         canvas.setAttribute("width", "1300");
         canvas.setAttribute("height", "800");
@@ -75,7 +59,6 @@ var DoenerDream;
         let form = document.querySelector("form");
         body.removeChild(form);
         body.appendChild(canvas);
-        // canvas = <HTMLCanvasElement>document.querySelector("canvas");
         DoenerDream.crc2 = canvas.getContext("2d");
         DoenerDream.middle = new DoenerDream.Vector(DoenerDream.crc2.canvas.width / 2, DoenerDream.crc2.canvas.height / 2);
         DoenerDream.barPosition = new DoenerDream.Vector(DoenerDream.middle.x - 100, 0);
