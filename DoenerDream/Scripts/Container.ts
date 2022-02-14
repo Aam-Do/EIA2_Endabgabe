@@ -14,12 +14,7 @@ namespace DoenerDream {
         public draw(): void {
             crc2.save();
             crc2.translate(this.position.x, this.position.y);
-            crc2.fillStyle = "green";
-            crc2.fillRect(0, 70 - 70 * (this.amount / this.capacity), 90, 70 * (this.amount / this.capacity));
-            crc2.strokeStyle = "white";
-            crc2.strokeRect(0, 0, 90, 70);
-            crc2.fillStyle = "white";
-            crc2.fillText(this.ingredient, 5, 60);
+            drawContainer(this.amount, this.capacity, this.ingredient);
             crc2.restore();
         }
     }

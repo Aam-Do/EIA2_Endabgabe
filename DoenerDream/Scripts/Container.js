@@ -11,12 +11,7 @@ var DoenerDream;
         draw() {
             DoenerDream.crc2.save();
             DoenerDream.crc2.translate(this.position.x, this.position.y);
-            DoenerDream.crc2.fillStyle = "green";
-            DoenerDream.crc2.fillRect(0, 70 - 70 * (this.amount / this.capacity), 90, 70 * (this.amount / this.capacity));
-            DoenerDream.crc2.strokeStyle = "white";
-            DoenerDream.crc2.strokeRect(0, 0, 90, 70);
-            DoenerDream.crc2.fillStyle = "white";
-            DoenerDream.crc2.fillText(this.ingredient, 5, 60);
+            DoenerDream.drawContainer(this.amount, this.capacity, this.ingredient);
             DoenerDream.crc2.restore();
         }
     }

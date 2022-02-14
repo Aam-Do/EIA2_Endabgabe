@@ -14,6 +14,8 @@ var DoenerDream;
     })(TASK = DoenerDream.TASK || (DoenerDream.TASK = {}));
     class Staff extends DoenerDream.Human {
         constructor(_restingTime) {
+            super(new DoenerDream.Vector(0, 0));
+            this.moods = ["burnout", "stressed", "content", "bored", "sleeping"];
             let validPos = false;
             let pos = new DoenerDream.Vector(0, 0);
             while (validPos == false) {
@@ -25,8 +27,7 @@ var DoenerDream;
                     validPos = true;
                 }
             }
-            super(pos);
-            this.moods = ["burnout", "stressed", "content", "bored", "sleeping"];
+            this.position = pos;
             this.mood = "content";
             this.task = TASK.WAITING;
             this.originalPosition = this.position.copy();
@@ -72,6 +73,8 @@ var DoenerDream;
             }
         }
         refill(_target) {
+            if (this.mood == this.moods[this.moods.length - 1])
+                this.mood = this.moods[this.moods.length - 2];
             this.task = TASK.GOINGTOCONTAINER;
             this.target = _target;
             let distance = new DoenerDream.Vector(this.target.position.x - this.position.x, this.target.position.y - this.position.y);

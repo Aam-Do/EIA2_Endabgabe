@@ -20,6 +20,7 @@ namespace DoenerDream {
         private originalPosition: Vector;
 
         public constructor(_restingTime: number) {
+            super(new Vector(0, 0));
             let validPos: boolean = false;
             let pos: Vector = new Vector(0, 0);
             while (validPos == false) {
@@ -31,7 +32,7 @@ namespace DoenerDream {
                     validPos = true;
                 }
             }
-            super(pos);
+            this.position = pos;
             this.mood = "content";
             this.task = TASK.WAITING;
             this.originalPosition = this.position.copy();
@@ -79,6 +80,8 @@ namespace DoenerDream {
         }
 
         public refill(_target: Container): void {
+            if (this.mood == this.moods[this.moods.length - 1])
+                this.mood = this.moods[this.moods.length - 2];
             this.task = TASK.GOINGTOCONTAINER;
             this.target = _target;
             let distance: Vector = new Vector(this.target.position.x - this.position.x, this.target.position.y - this.position.y);

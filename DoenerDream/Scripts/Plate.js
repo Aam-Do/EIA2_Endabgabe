@@ -8,12 +8,8 @@ var DoenerDream;
         }
         draw() {
             DoenerDream.crc2.save();
-            DoenerDream.crc2.fillStyle = "white";
             DoenerDream.crc2.translate(this.position.x, this.position.y);
-            DoenerDream.crc2.beginPath();
-            DoenerDream.crc2.arc(0, 0, 35, 0, 360);
-            DoenerDream.crc2.closePath();
-            DoenerDream.crc2.fill();
+            DoenerDream.drawPlate(this.contents);
             DoenerDream.crc2.restore();
         }
     }
