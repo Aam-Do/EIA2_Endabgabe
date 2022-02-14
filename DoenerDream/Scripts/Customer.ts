@@ -33,7 +33,7 @@ namespace DoenerDream {
                 this.order.push(order);
             }
             this.state = STATE.INQUEUE;
-            this.intervalId = setInterval(this.updateMood.bind(this), 10000);
+            this.intervalId = setInterval(this.updateMood.bind(this), 15000);
         }
 
         public move(_timeslice: number): void {
